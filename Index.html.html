@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioReviewer</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}
+
+h1 { color: #176b4d; }
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px #ccc;
+    margin-top: 20px;
+}
+
+button {
+    background: #176b4d;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    margin: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #105038;
+}
+
+#answer {
+    display: none;
+    color: #176b4d;
+    font-weight: bold;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🧬 BioReviewer</h1>
+    <h2>Ethnobotany Final Topic</h2>
+    <p>Your personal Biology study companion</p>
+
+    <div class="card">
+        <h2>Flashcards</h2>
+        <h3 id="question">What is an ethnobotanical study?</h3>
+
+        <p id="answer">The study of the relationship between groups of people and plants, including how people use plants</p>
+
+        <button onclick="showAnswer()">Show Answer</button>
+        <button onclick="nextCard()">Next Card</button>
+    </div>
+
+    <div class="card">
+        <h2>Biology Quiz</h2>
+
+        <p id="quizQuestion"></p>
+
+        <div id="options"></div>
+
+        <p id="result"></p>
+
+        <button onclick="nextQuiz()">Next Question</button>
+    </div>
+
+    <h3 id="score">Score: 0</h3>
+</div>
+
+<script>
+
+const flashcards = [
+    {
+        question: 'What is an ethnobotanical study?',
+        answer: "The study of the relationship between groups of people and plants, including how people use plants"
+    },
+    {
+        question: "What are some traditional uses of plants?",
+        answer: "Treatment, food, dye shelter, oil, and fiber"
+    },
+    {
+        question: "True or False: Plants are still used for the same purposes in modern times?",
+        answer: "True"
+    },
+    {
+        question: "What relationship exists between plants and human beings?",
+        answer: "Plants are essential part of many cultures, and humans depends on plants for different needs"
+    },
+    {
+        question: 'Why is it important to understand why ethnobotany is conserved?',
+        answer: "Understanding why it is conserved helps people recognized the importance of protecting ethnobotanical resources"
+    },
+    {
+        question: "What are ethnobotanical resources?",
+        answer: "Plant resources and the knowledge associated with their uses by human communities"
+    },
+    {
+        question: "Why are ethnobotanical resources important in daily life?",
+        answer: "They provide natural products that people depends on, including food, wood, medicinal materials, cosmetics, clothing, beverages, and fuels"
+    },
+    {
+        question: "What are examples of economically important plant products?",
+        answer: "Tannins and other natural products, wood for firewood and medicinal uses, cosmetics, clothing, tea, coffee, and fuels."
+    },
+    {
+        question: "How are plants important in medicine",
+        answer: "A large percentage of tress are used in the production of treatments for various diseases"
+    },
+    {
+        question: "what are the major reasons for conserving ethnobotanical resources",
+        answer: "Increasing pollutiomn, deforestation, desertification, the need to preserve existing ethnobotanical knowledge for future research"
+    },
+    {
+        question: "What environmental problems affect ethnobotanical resources?",
+        answer: "Pollution, deforestation, and desertification, many of which are associated with human activities"
+    },
+    {
+        question: "Why should existing ethnobotanical knowledge be conserved?",
+        answer: "It can be used by future generations and serve as a foundation for future research in different fields"
+    },
+    {
+        question: "What is plant diversity?",
+        answer: "The different species of plants found on Earth's surface"
+    },
+    {
+        question: "What are examples of plant groups that contribute to plant diversity?",
+        answer: "Trees, vines, mosses, grasses, herbs, and ferns"
+    },
+    {
+        question: "What roles do different plant species play in the environment",
+        answer: "They help control the balance of air in the atmosphere and produce nutrients in the ecosystem through photosynthesis"
+    },
+    {
+        question: "What factors affect biodiversity?",
+        answer: "Human activities, climate change, and environmental effects"
+    },
+    {
+        question: "What is biotechnology in plant conservation",
+        answer: "The use of biotechnology and different techniques to achieve the conservation of plants"
+    },
+    {
+        question: "What are the three (3) conservation approaches discussed in the module?",
+        answer: "In vitro techniques, in situ methods, and ex situ methods"
+    },
+    {
+        questions: "What are in vitro techniques?",
+        answer: "Techniques usually used for endangered plant species to produce plant material similar to the original under specific conditions and environmental parameters"
+    },
+    {
+        questioon: "What is one important requirement of in vitro techniques?",
+        answer: "The resulting plant material should be disease-free"
+    },
+    {
+        question: "What are in situ methods?",
+        answer: "Conservation methods that involve the protection of plants in their natural habitats"
+    },
+    {
+       question: "What is required from the original plant when using in vitro techniques?",
+       answer: "Genetic material must ne extracted from the original plant species"
+    },
+    {
+        question: "How are in vitro techniques used for indigenous plant speceies?",
+        answer: "Reseachers take certain indigenous plant species under protection, and academic and research institutions use the protected speceis to obtain plant samples for producing plant materials"
+    },
+    {
+        question: "What is medium-term conservation?",
+        answer: "Conservation that involves generating plant material through the reduction of plant growth and increasing the intervals between plant subcultures"
+    },
+    {
+        question: "What is long-term conservation?",
+        answer: "Conservation that uses a technique known as cryopreservation"
+    },
+    {
+        question: "What is cryopreservation?",
+        answer: "The preservation of plant material using liquid nitrogen"
+    },
+    {
+        question: "What are in situ methods?",
+        answer: "Methods that maintain plants in their natural habitats and preserve the ecological conditions of their surroundings"
+    },
+    {
+        question: "What must be maintained for terrestrial plants under in situ conservation?",
+        answer: "The nature and conditions of the soil"
+    },
+    {
+        question: "What are ex situ methods?",
+        answer: "Methods that focus on protecting different plant species and plant parts outside their natural habitats"
+    },
+    {
+        question: "What plant parts can be used in ex situ methods?",
+        answer: "Cuttings, tubers, seeds, and rhizomes"
+    },
+    {
+        question: "What can ex situ conservation can lead to?",
+        answer: "The generation of gene banks that can be used in plant propagation"
+    },
+    {
+        question: "What types of plants are targeted by these conservation techniques?",
+        answer: "Endangered, rare, and wild plants"
+    },
+    {
+        question: "What is genetic engineering in plant conservation",
+        answer: "The modification of genes so that plants become stronger or possess desired traits"
+    },
+    {
+        question: "How does biotechnology use molecular technology?",
+        answer: "It uses molecular technology to identify or obtain the desired type of plant"
+    },
+    {
+        question: "What are molecular markers?",
+        answer: "Important resources for ensuring plant-species diversity and identifying which tissues and genes will be used in breeding"
+    },
+    {
+        question: "What are the three ways to achieving conservation of ethnobotanical resources through biotechnology listed in the module?",
+        answer: "1. Collection and storage of genes, including tissu culture and seeds. 2. Idenfication of genes used in the growth of extinct plant species. 3. Improvement or advancement of procedures used in biotechnology"
+    },
+    {
+        question: "What do researchers consider when improving biotechnology procedures?",
+        answer: "The safetest and most efficient methods of germplasm protection"
+    },
+    {
+        question: "What are classical methods in plant conservation?",
+        answer: "Plant tissue culture, plant cell culture, and embryo culture"
+    },
+    {
+        question: "What disadvantage of classical methods is mentioned in the module?",
+        answer: "There may be a hindrance to the production of plants or propagules because biotechnology can produce superior seeds"
+    },
+    {
+        question: "What is plant tissue culture?",
+        answer: "The growth of pieces of plant tissue extracted from selected plant or plant part, such as root or stem"
+    },
+    {
+        question: "What must be done to plant tissue cuttings before culture?",
+        answer: "They must be disinfected and sterilized"
+    },
+    {
+        question: "What can plant tissue cuture produce?",
+        answer: "Mass copies of a plant that are genetically identical, which also called clone (cloning)"
+    },
+    {
+        question: "What is plant cell culture?",
+        answer: "The use of plant cells extracted from selected and disinfected plant parts"
+    },
+    {
+        question: "What is done with the extracted plant cell",
+        answer: "They are maintained in a growth-facilitating medium and undergo regeneration under specific conditions"
+    },
+    {
+        question: "What happens to regenerated cells in plant cell culture?",
+        answer: "They can be used to develop vegetative propagations"
+    },
+    {
+        questions: "How can biotechnology improve plant vigor?",
+        answer: "Through manipulation of genes and the introduction or transfer of desirable plant traits"
+    }, 
+    {
+        question: "Desirable pkant traits",
+        answer: "Pest resistance and disease prevention or immunity"
+    },
+    {
+        questions: "What are DNA Banks?",
+        answer: "Storage systems used for the long-term preservation of genes from a particular plant species."
+    },
+    {
+        questions: "What type of storage is ised in DNA banks?",
+        answer: "Cold storage unites are used to preserve genetic material."
+    }, 
+    {
+        question: "What are the three steps of in vitro technologies described?",
+        answer: "1. Initiation of the culture , 2. Maintenance of the culture , 3. Multiplication."
+    },
+    {
+        question: "Why are seeds produced through these methods described as artificial?",
+        answer: "Because plant cells or tissue are used to produce them"
+    },
+    {
+        question: "What is genetic diversity evaluation?",
+        answer: "A significant part of biodiversity conservation that ecailate differences among plant genetic resources."
+    },
+    {
+        question: "What are other aspects are evaluated in genetic diversity evaulation",
+        answer: "Plat parts and the diversity of plant species"
+    },
+    {
+        question: "How are markers used in genetic diversity evaluation?",
+        answer: "Makers are used to map the genes required for manipulating genetic material"
+    },
+    {
+        question: "Law about endagered plant species",
+        answer: "The Endagered Species Act (1973)"
+    },
+    {
+        question: "Role of the TES (1973)",
+        answer: "It demonstrate the government's role in conserving endangered plant, particularly those vulnerable to extinction."
+    },
+    {
+        question: "What are the purposes of laws concerning endangered plant species?",
+        answer: "To minimize trade in endangered indigenous plant species, reduce harvesting, and limit the important and exportation of plant products"
+    },
+    {
+        question: "what is the roles of the Environmental Protection Agency (EPA), as described in the module?",
+        answer: "It is involved in forest conservation and conducts analyses of plant types that are vulnerable to extinction."
+    },
+    {
+        question: "What disciplines are involved in biotechnology?",
+        answer: "Biochemistry, molecular biology, and genetics"
+    },
+    {
+        questions: "What is pharmacogenomics",
+        answer: "The analysis and investigation of the possible effects of medicines in the human body."
+    },
+    {
+        question: "What activities are involved in pharmacogenomics?",
+        answer: "Extraction of genes from plants, genetic evaluation of gene variations, and investigation of gene expression and single-nucleotide changes"
+    },
+    {
+        question: "What methods can help incease plant production for medicinal use?",
+        answer: "Clonal propagation and in vitro cultures"
+    },
+    {
+        question: 'What is blue technology?',
+        answer: "Biotechnology involving the manipulation of elements of nature, including the sea"
+    },
+    {
+        question: "What are the applications of blue technology?",
+        answer: "It is mainly used in industries involved in producing bio-oils, uses bioinformatics to solve biologival issues, and facilitates quick and easy data evaluation"
+    },
+    {
+        question: "How does blue technology help researchers?",
+        answer: "It allows scientist to investigate molecules from different plant species and handle large numbers of plant species"
+    },
+    {
+        question: "What is red technology?",
+        answer: "Biotechnology utilized in the medical field"
+    },
+    {  
+        question: "How is red technology used?",
+        answer: "It make use of plant species involved in the production of vaccines"
+    },
+    {
+        question: "What is gray technology?",
+        answer: "Biotechnology commonly used by scientist to ensure consistency in plant diversity and remove pollutants"
+    },
+    {
+        question: "What brown technology?",
+        answer: "Biotechnology used in the conservation of plant species in arid areas"
+    },
+    {
+        question: "What are the benefist of brown technology?",
+        answer: "It helps produce seeds that yields plants capable of surviving harsh environmental conditions and facilitates greater conservation of plant resources."
+    },
+    {
+        question: "How has indigenous knowledge contributed to ethnobotanical research?",
+        answer: "It has formed the basis of much current ethnobotanical research and is used by institutions of higher learning"
+    },
+    {
+        question: "What aws the purpose of the Kenya study on traditional herbal medicine?",
+        answer: "To investigation traditioanl herbal medicines and their potential for treating currently exsiting diseases"
+    },
+    {
+        question: "Who is responsible for obtaining indigenous knowldge from IPs?",
+        answer: "Ethnobotanists"
+    },
+    {
+        questions: "From whom do reseachers commonly acquire indigenous knowldge?",
+        answer: "Traditional leaders"
+    },
+    {
+        question: "Why are traditional leaders important in ethnobotanical research?",
+        answer: "The influence community activities, including how people use plants found in their environment"
+    },
+    {
+        question: "How cultural taboos help conserve plants?",
+        answer: "Taboos may prohibit cutting certain tree species or harvesting certain plants, helping those species survive for future generations"
+    },
+    {
+        question: "What is the first step in obtaining indigenous knowledge?",
+        answer: "Seek permission from the relevant authority"
+    },
+    {
+        question: "What research tool can be prepared when gathering indigenous knowledge?",
+        answer: "A questionare"
+    },
+    {
+        question: "Study of Kipkore et al., 2014",
+        answer: "Utilization of medicinal wild plants among the marakwet community in Kenya, through interviews with relevant community members and traditional healers"
+    },
+    {
+        question: "What information did Marakwet study focus on preserving?",
+        answer: "Traditional plant names, the illnesses treated by the plants, and traditional methods of treatment"
+    },
+    {
+        question: "What illnesses were reported to be treated using medicinal plants in the study?",
+        answer: "Stomach aches, typhoid, diarrhea, chest pains, and other illnesses"
+    },
+    {
+        question:"How many diseases were reported as treatable using medicinal plants in the study?",
+        answer: "41 diseases"
+    },
+    {
+        questions: "Which plant parts were most commonly used in the treatment process?",
+        answer: "Barks, fruits, flowers, roots, and bulbs"
+    },
+    {
+        question: "What specific diseases were mentioned in relation to particular plants?",
+        answer: "Malaria, fever, diabetes, and arthritis"
+    }
+];
+
+let cardIndex = 0;
+
+function showAnswer() {
+    document.getElementById("answer").style.display = "block";
+}
+
+function nextCard() {
+    cardIndex = (cardIndex + 1) % flashcards.length;
+
+    document.getElementById("question").textContent =
+        flashcards[cardIndex].question;
+
+    document.getElementById("answer").textContent =
+        flashcards[cardIndex].answer;
+
+    document.getElementById("answer").style.display = "none";
+}
+
+const quizzes = [
+    {
+        question: "Which organelle produces ATP?",
+        options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi"],
+        answer: "Mitochondria"
+    },
+    {
+        question: "What is the genetic material of most organisms?",
+        options: ["RNA", "Protein", "DNA", "Lipids"],
+        answer: "DNA"
+    },
+    {
+        question: "Which process produces glucose in plants?",
+        options: ["Respiration", "Photosynthesis", "Fermentation", "Mitosis"],
+        answer: "Photosynthesis"
+    }
+];
+
+let quizIndex = 0;
+let score = 0;
+let answered = false;
+
+function loadQuiz() {
+    answered = false;
+
+    const quiz = quizzes[quizIndex];
+
+    document.getElementById("quizQuestion").textContent =
+        quiz.question;
+
+    document.getElementById("result").textContent = "";
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    quiz.options.forEach(option => {
+        const button = document.createElement("button");
+
+        button.textContent = option;
+        button.className = "option";
+
+        button.onclick = () => checkAnswer(option);
+
+        optionsDiv.appendChild(button);
+    });
+}
+
+function checkAnswer(option) {
+    if (answered) return;
+
+    answered = true;
+
+    const correct = quizzes[quizIndex].answer;
+
+    if (option === correct) {
+        score++;
+        document.getElementById("result").textContent =
+            "Correct! 🎉";
+    } else {
+        document.getElementById("result").textContent =
+            "Incorrect. Answer: " + correct;
+    }
+
+    document.getElementById("score").textContent =
+        "Score: " + score;
+}
+
+function nextQuiz() {
+    quizIndex = (quizIndex + 1) % quizzes.length;
+    loadQuiz();
+}
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
